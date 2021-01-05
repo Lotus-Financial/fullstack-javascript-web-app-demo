@@ -1,0 +1,16 @@
+{
+    "gizmos": [
+        {
+            "name": "Drone",
+            "type": "Remote Aerial Craft"
+        },
+        {
+            "name": "Air Fryer",
+            "type": "Modern Cooking Appliance"
+        },
+        {
+            "name": "Virtual Reality Headset",
+            "type": "Entertainment, Training, And Simulation Device"
+        }
+    ]
+}
