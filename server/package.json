@@ -1,0 +1,19 @@
+{
+  "name": "blue-skies-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/john-blaine/blue-skies-retirement.git"
+  },
+  "author": "John Blaine Jr.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/john-blaine/blue-skies-retirement/issues"
+  },
+  "homepage": "https://github.com/john-blaine/blue-skies-retirement#readme"
+}
