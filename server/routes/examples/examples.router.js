@@ -1,15 +1,18 @@
 import express from 'express';
 
-import examples from '../../mocks/examples/gizmos.example.json'
+import examplesController from '../../controllers/examples/examples.controller.js';
+import examples from '../../mocks/examples/gizmos.example.json';
 
 const router = express.Router();
 
 router.get('/gizmos', (req, res) => {
-  res.status(200).send(examples.gizmos);
+  const gizmos = examplesController.listGizmos();
+  res.status(200).send(gizmos);
 });
 
-router.get('/gizmo', (req, res) => {
-  res.status(200).send(examples.gizmos[0]);
+router.get('/gizmo/:name', (req, res) => {
+  const retrievedGizmo = examplesController.retrieveGizmo(req.params?.name);
+  res.status(200).send(retrievedGizmo);
 });
 
 router.post('/gizmo', (req, res) => {
@@ -29,6 +32,5 @@ router.delete('/gizmo', (req, res) => {
   const deletedGizmo = examples.gizmos.splice(deleteI, 1);
   res.status(200).send(deletedGizmo);
 });
-
 
 export default router;
