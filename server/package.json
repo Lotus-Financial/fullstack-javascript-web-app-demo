@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/john-blaine/blue-skies-retirement/issues"
   },
-  "homepage": "https://github.com/john-blaine/blue-skies-retirement#readme"
+  "homepage": "https://github.com/john-blaine/blue-skies-retirement#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "express": "^4.17.1"
+  }
 }
