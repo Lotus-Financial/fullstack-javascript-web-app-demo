@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --experimental-json-modules index.js",
     "test": "mocha --experimental-json-modules 'test/**/*.spec.js'"
-  }, 
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/john-blaine/blue-skies-retirement.git"
@@ -26,6 +26,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
-    "sinon": "^9.2.2"
+    "sinon": "^9.2.2",
+    "supertest": "^6.0.1"
   }
 }
