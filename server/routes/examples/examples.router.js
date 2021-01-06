@@ -1,7 +1,6 @@
 import express from 'express';
 
 import examplesController from '../../controllers/examples/examples.controller.js';
-import examples from '../../mocks/examples/gizmos.example.json';
 
 const router = express.Router();
 
@@ -16,20 +15,17 @@ router.get('/gizmo/:name', (req, res) => {
 });
 
 router.post('/gizmo', (req, res) => {
-  examples.gizmos.push(req.body.data);
-  res.status(201).send(examples.gizmos);
+  const createdGizmo = examplesController.createGizmo(req.body?.data);
+  res.status(201).send(createdGizmo);
 });
 
 router.put('/gizmo', (req, res) => {
-  const gizmoToUpdate = examples.gizmos.find(el => el.name === req.body.data.name);
-  gizmoToUpdate.name = req.body?.data?.name;
-  gizmoToUpdate.type = req.body?.data?.type;
-  res.status(200).send(examples.gizmos);
+  const updatedGizmo = examplesController.updateGizmo(req.body?.data);
+  res.status(200).send(updatedGizmo);
 });
 
-router.delete('/gizmo', (req, res) => {
-  const deleteI = examples.gizmos.findIndex(el => el.name === req.body?.data?.name)
-  const deletedGizmo = examples.gizmos.splice(deleteI, 1);
+router.delete('/gizmo/:name', (req, res) => {
+  const deletedGizmo = examplesController.deleteGizmo(req.params?.name);
   res.status(200).send(deletedGizmo);
 });
 
