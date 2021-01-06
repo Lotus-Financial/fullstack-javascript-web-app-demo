@@ -1,12 +1,6 @@
-import chai from 'chai';
 import request from 'supertest';
 
 import app from '../../../../index.js';
-
-const { expect } = chai;
-const { assert, createSandbox, stub } = sinon;
-
-const sandbox = createSandbox();
 
 describe('Integration Tests - healthcheck.router', () => {
   describe('Success cases', () => {
