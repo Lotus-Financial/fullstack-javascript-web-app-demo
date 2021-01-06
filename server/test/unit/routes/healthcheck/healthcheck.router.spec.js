@@ -1,18 +1,23 @@
-import chai from 'chai';
 import sinon from 'sinon';
-import express from 'express';
 
-import healthcheckRouter from '../../../../routes/healthcheck/healthcheck.router';
+import { healthcheckGetRoute } from '../../../../routes/healthcheck/healthcheck.router.js';
 
-const { expect } = chai;
-const { createSandbox, stub } = sinon;
+const { assert, createSandbox } = sinon;
 
 const sandbox = createSandbox();
 
 describe(' Unit Tests - healthcheck.router', () => {
   describe('Success cases', () => {
+    let req;
+    let res;
+    let sendStub;
+
     beforeEach(() => {
-      const routerStub = stub(express, 'Router');
+      req = {};
+      res = {};
+      sendStub = sandbox.stub();
+      
+      res.send = sendStub;
     });
 
     afterEach(() => {
@@ -20,7 +25,10 @@ describe(' Unit Tests - healthcheck.router', () => {
     });
 
     it('should return the string "Blue Skies Core is UP!"', () => {
-      
+      healthcheckGetRoute(req, res);
+
+      assert.calledOnce(sendStub);
+      assert.calledWith(sendStub, 'Blue Skies Core is UP!');
     });
   });
 });
