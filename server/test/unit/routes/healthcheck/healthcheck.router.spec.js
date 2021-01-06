@@ -1,12 +1,12 @@
 import sinon from 'sinon';
 
-import { healthcheckGetRoute } from '../../../../routes/healthcheck/healthcheck.router.js';
+import { healthcheckGET } from '../../../../routes/healthcheck/healthcheck.router.js';
 
 const { assert, createSandbox } = sinon;
 
 const sandbox = createSandbox();
 
-describe(' Unit Tests - healthcheck.router', () => {
+describe('Unit Tests - healthcheck.router', () => {
   describe('Success cases', () => {
     let req;
     let res;
@@ -25,7 +25,7 @@ describe(' Unit Tests - healthcheck.router', () => {
     });
 
     it('should return the string "Blue Skies Core is UP!"', () => {
-      healthcheckGetRoute(req, res);
+      healthcheckGET(req, res);
 
       assert.calledOnce(sendStub);
       assert.calledWith(sendStub, 'Blue Skies Core is UP!');
