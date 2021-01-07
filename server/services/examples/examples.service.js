@@ -13,7 +13,6 @@ examplesService.createGizmo = gizmo => {
 
 examplesService.updateGizmo = gizmo => {
   const gizmoToUpdate = examplesData.gizmos.find(el => el.name === gizmo.name);
-  console.log('This', gizmoToUpdate);
   Object.keys(gizmo).forEach(key => gizmoToUpdate[key] = gizmo[key])
   return gizmoToUpdate;
 }
