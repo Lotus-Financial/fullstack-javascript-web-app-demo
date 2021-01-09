@@ -1,11 +1,11 @@
-import express from 'express';
+const express = require('express');
 
-import healthcheck from './healthcheck/healthcheck.router.js';
-import examples from './examples/examples.router.js';
+const healthcheck = require('./healthcheck/healthcheck.router.js').router;
+const examples = require('./examples/examples.router.js').router;
 
 const router = express.Router();
 
 router.use('/healthcheck', healthcheck);
 router.use('/examples', examples);
 
-export default router;
+module.exports = router;

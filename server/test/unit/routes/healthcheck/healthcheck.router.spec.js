@@ -1,6 +1,6 @@
-import sinon from 'sinon';
+const sinon = require('sinon');
 
-import { healthcheckGET } from '../../../../routes/healthcheck/healthcheck.router.js';
+const { healthcheckGET } = require('../../../../routes/healthcheck/healthcheck.router.js').callbacks;
 
 const { assert, createSandbox } = sinon;
 

@@ -1,30 +1,30 @@
-import express from 'express';
+const express = require('express');
 
-import examplesController from '../../controllers/examples/examples.controller.js';
+const examplesController = require('../../controllers/examples/examples.controller.js');
 
 const examplesRouter = express.Router();
 
-export const listGizmosGET = (req, res) => {
+const listGizmosGET = (req, res) => {
   const gizmos = examplesController.listGizmos();
   res.status(200).send(gizmos);
 }
 
-export const retrieveGizmoGET = (req, res) => {
+const retrieveGizmoGET = (req, res) => {
   const retrievedGizmo = examplesController.retrieveGizmo(req.params?.name);
   res.status(200).send(retrievedGizmo);
 }
 
-export const createGizmoPOST = (req, res) => {
+const createGizmoPOST = (req, res) => {
   const createdGizmo = examplesController.createGizmo(req.body?.data);
   res.status(201).send(createdGizmo);
 }
 
-export const updateGizmoPUT = (req, res) => {
+const updateGizmoPUT = (req, res) => {
   const updatedGizmo = examplesController.updateGizmo(req.body?.data);
   res.status(200).send(updatedGizmo);
 }
 
-export const deleteGizmoDELETE = (req, res) => {
+const deleteGizmoDELETE = (req, res) => {
   const deletedGizmo = examplesController.deleteGizmo(req.params?.name);
   res.status(200).send(deletedGizmo);
 }
@@ -35,4 +35,13 @@ examplesRouter.post('/gizmo', createGizmoPOST);
 examplesRouter.put('/gizmo', updateGizmoPUT);
 examplesRouter.delete('/gizmo/:name', deleteGizmoDELETE);
 
-export default examplesRouter;
+module.exports = {
+  router: examplesRouter,
+  callbacks: {
+    listGizmosGET,
+    retrieveGizmoGET,
+    createGizmoPOST,
+    updateGizmoPUT,
+    deleteGizmoDELETE
+  }
+};

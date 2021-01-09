@@ -1,8 +1,8 @@
-import sinon from 'sinon';
+const sinon = require('sinon');
 
-import examplesController from '../../../../controllers/examples/examples.controller.js';
+const examplesController = require('../../../../controllers/examples/examples.controller.js');
 
-import { createGizmoPOST, deleteGizmoDELETE, listGizmosGET, retrieveGizmoGET, updateGizmoPUT } from '../../../../routes/examples/examples.router.js';
+const { createGizmoPOST, deleteGizmoDELETE, listGizmosGET, retrieveGizmoGET, updateGizmoPUT } = require('../../../../routes/examples/examples.router.js').callbacks;
 
 const { assert, createSandbox } = sinon;
 const sandbox = createSandbox();

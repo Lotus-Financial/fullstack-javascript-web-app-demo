@@ -1,7 +1,7 @@
-import express from 'express';
-import bodyParser from 'body-parser';
+const express = require('express');
+const bodyParser = require('body-parser');
 
-import router from './routes/router.js';
+const router = require('./routes/router.js');
 
 const app = express();
 
@@ -11,4 +11,4 @@ app.use(router);
 
 app.listen(3000, () => console.log('Server running on port 3000!'));
 
-export default app;
+module.exports = app;

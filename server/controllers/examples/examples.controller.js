@@ -1,4 +1,4 @@
-import examplesService from '../../services/examples/examples.service.js';
+const examplesService = require('../../services/examples/examples.service.js');
 
 const examplesController = {};
 
@@ -12,4 +12,4 @@ examplesController.updateGizmo = gizmo => examplesService.updateGizmo(gizmo);
 
 examplesController.deleteGizmo = name => examplesService.deleteGizmo(name);
 
-export default examplesController;
+module.exports = examplesController;

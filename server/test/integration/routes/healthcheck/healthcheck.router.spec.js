@@ -1,6 +1,6 @@
-import request from 'supertest';
+const request = require('supertest');
 
-import app from '../../../../index.js';
+const app = require('../../../../index.js');
 
 describe('Integration Tests - healthcheck.router', () => {
   describe('Success cases', () => {

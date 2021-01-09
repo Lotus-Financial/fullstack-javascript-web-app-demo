@@ -1,5 +1,3 @@
-import examplesData from '../../mocks/examples/gizmos.example.json';
-
 const examplesService = {};
 
 examplesService.retrieveGizmos = () => examplesData.gizmos;
@@ -26,4 +24,4 @@ examplesService.deleteGizmo = name => {
   return null;
 }
 
-export default examplesService;
+module.exports = examplesService;
