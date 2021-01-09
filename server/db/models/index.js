@@ -5,6 +5,7 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config.json');
 const db = {};
 
 let sequelize;
@@ -13,16 +14,7 @@ let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-  sequelize = new Sequelize('', 'postgres', 'password', {
-    dialect: 'postgres'
-  });
-}
-
-try {
-  await sequelize.authenticate();
-  console.log('Connection to database has been established successfully.');
-} catch (error) {
-  console.error('Unable to connect to the database:', error);
+  sequelize = new Sequelize(config[env]);
 }
 
 fs
@@ -43,5 +35,7 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+db.Gizmo = require('./gizmo.model.js')(db.sequelize, db.Sequelize);
 
 module.exports = db;
