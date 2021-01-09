@@ -1,27 +1,13 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Gizmo extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
-  };
-  Gizmo.init({
+module.exports = (sequelize, Sequelize) => {
+  const Gizmo = sequelize.define('gizmo', {
     name: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false
     },
-    type: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Gizmo',
+    type: {
+      type: Sequelize.STRING
+    }
   });
-  return Gizmo;
-};
+
+  return Gizmo
+}
