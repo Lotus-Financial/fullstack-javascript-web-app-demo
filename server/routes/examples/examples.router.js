@@ -4,8 +4,8 @@ const examplesController = require('../../controllers/examples/examples.controll
 
 const examplesRouter = express.Router();
 
-const listGizmosGET = (req, res) => {
-  const gizmos = examplesController.listGizmos();
+const listGizmosGET = async (req, res) => {
+  const gizmos = await examplesController.listGizmos();
   res.status(200).send(gizmos);
 }
 

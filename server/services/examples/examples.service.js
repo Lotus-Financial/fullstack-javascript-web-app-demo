@@ -1,27 +1,20 @@
+const db = require('../../db/models');
+const Gizmo = db.Gizmo;
+
 const examplesService = {};
 
-examplesService.retrieveGizmos = () => examplesData.gizmos;
-
-examplesService.retrieveGizmo = name => examplesData.gizmos.find(el => el.name === name)
-
-examplesService.createGizmo = gizmo => {
-  examplesData.gizmos.push(gizmo)
-  return examplesData.gizmos.slice(-1)[0];
+examplesService.retrieveGizmos = async () => {
+  const gizmos = await Gizmo.findAll();
+  const plainGizmos = gizmos.map(gizmo => gizmo.get({ plain: true}));
+  return plainGizmos;
 };
 
-examplesService.updateGizmo = gizmo => {
-  const gizmoToUpdate = examplesData.gizmos.find(el => el.name === gizmo.name);
-  Object.keys(gizmo).forEach(key => gizmoToUpdate[key] = gizmo[key])
-  return gizmoToUpdate;
-}
+examplesService.retrieveGizmo = name => {}
 
-examplesService.deleteGizmo = name => {
-  const deleteInd = examplesData.gizmos.findIndex(el => el.name === name);
-  if (deleteInd >= 0) {
-    const deletedGizmo = examplesData.gizmos.splice(deleteInd, 1)
-    return deletedGizmo;
-  }
-  return null;
-}
+examplesService.createGizmo = gizmo => {};
+
+examplesService.updateGizmo = gizmo => {}
+
+examplesService.deleteGizmo = name => {}
 
 module.exports = examplesService;
