@@ -1,10 +1,9 @@
-const sinon = require('sinon');
+const { assert, createSandbox } = require('sinon');
 
 const examplesController = require('../../../../controllers/examples/examples.controller.js');
 
 const { createGizmoPOST, deleteGizmoDELETE, listGizmosGET, retrieveGizmoGET, updateGizmoPUT } = require('../../../../routes/examples/examples.router.js').callbacks;
 
-const { assert, createSandbox } = sinon;
 const sandbox = createSandbox();
 
 describe('Unit Tests - examples.router', () => {
@@ -26,7 +25,7 @@ describe('Unit Tests - examples.router', () => {
     res.status = statusStub;
     res.send = sendStub;
 
-    sandbox.stub(examplesController, 'listGizmos').returns(gizmos);
+    sandbox.stub(examplesController, 'listGizmos').resolves(gizmos);
     sandbox.stub(examplesController, 'retrieveGizmo').returns(gizmo1);
     sandbox.stub(examplesController, 'createGizmo').returns(gizmo2);
     sandbox.stub(examplesController, 'updateGizmo').returns(gizmo3);
@@ -39,14 +38,14 @@ describe('Unit Tests - examples.router', () => {
 
   describe('listGizmosGET', () => {
     describe('Success cases', () => {
-      it('should call examplesController.listGizmos', () => {
-        listGizmosGET(req, res);
+      it('should call examplesController.listGizmos', async () => {
+        await listGizmosGET(req, res);
 
         assert.calledOnce(examplesController.listGizmos);
       });
 
-      it('should respond with a 200 status and the list of gizmos', () => {
-        listGizmosGET(req, res);
+      it('should respond with a 200 status and the list of gizmos', async () => {
+        await listGizmosGET(req, res);
 
         assert.calledWith(statusStub, 200);
         assert.calledWith(sendStub, gizmos);
