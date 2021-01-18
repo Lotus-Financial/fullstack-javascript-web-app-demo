@@ -9,12 +9,16 @@ examplesService.retrieveGizmos = async () => {
   return plainGizmos;
 };
 
-examplesService.retrieveGizmo = name => {}
+examplesService.retrieveGizmo = id => {
+  const gizmo = await Gizmo.findByPk(id);
+  const plainGizmo = gizmo.get({ plain: true });
+  return plainGizmo;
+}
 
 examplesService.createGizmo = gizmo => {};
 
 examplesService.updateGizmo = gizmo => {}
 
-examplesService.deleteGizmo = name => {}
+examplesService.deleteGizmo = id => {}
 
 module.exports = examplesService;
