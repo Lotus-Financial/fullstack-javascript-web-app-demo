@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const router = require('./routes/router.js');
+const { invalidRouteMiddleware, globalErrorHandlerMiddleware } = require('./middleware')
 const db = require('../db/models');
 
 const app = express();
@@ -9,6 +10,8 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use(router);
+app.all('*', invalidRouteMiddleware);
+app.use(globalErrorHandlerMiddleware);
 
 db.sequelize.sync();
 
@@ -19,7 +22,6 @@ try {
 } catch (error) {
   console.error('Unable to connect to the database:', error);
 }
-
 
 app.listen(3000, () => console.log('Server running on port 3000!'));
 

@@ -9,18 +9,19 @@ const listGizmosGET = async (req, res) => {
   res.status(200).send(gizmos);
 }
 
-const retrieveGizmoGET = async (req, res) => {
+const retrieveGizmoGET = async (req, res, next) => {
   let retrievedGizmo;
   try {
     retrievedGizmo = await examplesController.retrieveGizmo(req.params?.id);
 
     res.status(200).send(retrievedGizmo);
   } catch (e) {
-    if (e.name === 'NotFoundError') {
-      res.status(404).send({ message: e.message })
-    } else {
-      throw e;
-    }
+    next(e);
+  //   if (e.name === 'NotFoundError') {
+  //     res.status(404).send({ message: e.message })
+  //   } else {
+  //     throw e;
+  //   }
   }
 }
 
