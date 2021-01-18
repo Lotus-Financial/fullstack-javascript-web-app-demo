@@ -56,11 +56,11 @@ describe('Unit Tests - examples.router', () => {
   describe('retrieveGizmoGET', () => {
     describe('Success cases', () => {
       it('should call examplesController.retrieveGizmo with the correct args', () => {
-        const gizmoName = 'Drone'
-        req.params.name = gizmoName;
+        const gizmoId = 1;
+        req.params.id = gizmoId;
         retrieveGizmoGET(req, res);
         
-        assert.calledWith(examplesController.retrieveGizmo, gizmoName)
+        assert.calledWith(examplesController.retrieveGizmo, gizmoId)
       });
 
       it('should respond with a 200 status and the retrieved gizmo', () => {
@@ -113,11 +113,11 @@ describe('Unit Tests - examples.router', () => {
   describe('deleteGizmoDELETE', () => {
     describe('Success cases', () => {
       it('should call examplesController.updateGizmo with the correct args', () => {
-        const gizmoToDelete = 'Virtual Reality Headset';
-        req.params.name = gizmoToDelete;
+        const gizmoToDeleteId = 1;
+        req.params.id = gizmoToDeleteId;
         deleteGizmoDELETE(req, res);
 
-        assert.calledWith(examplesController.deleteGizmo, gizmoToDelete);
+        assert.calledWith(examplesController.deleteGizmo, gizmoToDeleteId);
       });
 
       it('should respond with a 200 status and the updated gizmo', () => {
