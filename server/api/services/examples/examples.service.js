@@ -1,6 +1,8 @@
 const db = require('../../../db/models');
 const Gizmo = db.Gizmo;
 
+const customErrors = require('../../helpers/errors/customErrors');
+
 const examplesService = {};
 
 examplesService.listGizmos = async () => {
@@ -11,7 +13,9 @@ examplesService.listGizmos = async () => {
 
 examplesService.retrieveGizmo = async id => {
   const gizmo = await Gizmo.findByPk(id);
-  console.log('This gizmo', gizmo);
+  if (gizmo === null) {
+    throw new customErrors.NotFoundError('Gizmo', id)
+  }
   const plainGizmo = gizmo.get({ plain: true });
   return plainGizmo;
 }
