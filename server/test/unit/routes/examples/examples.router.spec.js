@@ -1,8 +1,8 @@
 const { assert, createSandbox } = require('sinon');
 
-const examplesController = require('../../../../controllers/examples/examples.controller.js');
+const examplesController = require('../../../../api/controllers/examples/examples.controller.js');
 
-const { createGizmoPOST, deleteGizmoDELETE, listGizmosGET, retrieveGizmoGET, updateGizmoPUT } = require('../../../../routes/examples/examples.router.js').callbacks;
+const { createGizmoPOST, deleteGizmoDELETE, listGizmosGET, retrieveGizmoGET, updateGizmoPUT } = require('../../../../api/routes/examples/examples.router.js').callbacks;
 
 const sandbox = createSandbox();
 

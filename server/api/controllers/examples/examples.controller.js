@@ -1,4 +1,4 @@
-const examplesService = require('../../services/examples/examples.service.js');
+const examplesService = require('../../services/examples/examples.service');
 
 const examplesController = {};
 

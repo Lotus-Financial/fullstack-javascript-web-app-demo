@@ -3,7 +3,7 @@ const { expect } = require('chai');
 
 const db = require('../../../../db/models');
 const Gizmo = db.Gizmo;
-const examplesService = require('../../../../services/examples/examples.service');
+const examplesService = require('../../../../api/services/examples/examples.service');
 
 const sandbox = createSandbox();
 

@@ -1,4 +1,4 @@
-const db = require('../../db/models');
+const db = require('../../../db/models');
 const Gizmo = db.Gizmo;
 
 const examplesService = {};
@@ -11,6 +11,7 @@ examplesService.listGizmos = async () => {
 
 examplesService.retrieveGizmo = async id => {
   const gizmo = await Gizmo.findByPk(id);
+  console.log('This gizmo', gizmo);
   const plainGizmo = gizmo.get({ plain: true });
   return plainGizmo;
 }

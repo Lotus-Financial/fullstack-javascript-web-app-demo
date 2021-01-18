@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --experimental-json-modules index.js",
+    "start": "nodemon --experimental-json-modules ./api/index.js",
     "test": "mocha --experimental-json-modules --exit 'test/unit/**/*.spec.js'",
     "test-int": "mocha --experimental-json-modules --exit 'test/integration/**/*.spec.js'",
     "db:reset": "cd ./db && npx sequelize-cli db:drop && npx sequelize-cli db:create && sequelize-cli db:migrate && sequelize-cli db:seed:all"
