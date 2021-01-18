@@ -10,7 +10,7 @@ const listGizmosGET = async (req, res) => {
 }
 
 const retrieveGizmoGET = (req, res) => {
-  const retrievedGizmo = examplesController.retrieveGizmo(req.params?.name);
+  const retrievedGizmo = examplesController.retrieveGizmo(req.params?.id);
   res.status(200).send(retrievedGizmo);
 }
 
@@ -25,15 +25,15 @@ const updateGizmoPUT = (req, res) => {
 }
 
 const deleteGizmoDELETE = (req, res) => {
-  const deletedGizmo = examplesController.deleteGizmo(req.params?.name);
+  const deletedGizmo = examplesController.deleteGizmo(req.params?.id);
   res.status(200).send(deletedGizmo);
 }
 
 examplesRouter.get('/gizmos', listGizmosGET);
-examplesRouter.get('/gizmo/:name', retrieveGizmoGET);
+examplesRouter.get('/gizmo/:id', retrieveGizmoGET);
 examplesRouter.post('/gizmo', createGizmoPOST);
 examplesRouter.put('/gizmo', updateGizmoPUT);
-examplesRouter.delete('/gizmo/:name', deleteGizmoDELETE);
+examplesRouter.delete('/gizmo/:id', deleteGizmoDELETE);
 
 module.exports = {
   router: examplesRouter,
