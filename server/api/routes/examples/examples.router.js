@@ -10,8 +10,18 @@ const listGizmosGET = async (req, res) => {
 }
 
 const retrieveGizmoGET = async (req, res) => {
-  const retrievedGizmo = await examplesController.retrieveGizmo(req.params?.id);
-  res.status(200).send(retrievedGizmo);
+  let retrievedGizmo;
+  try {
+    retrievedGizmo = await examplesController.retrieveGizmo(req.params?.id);
+
+    res.status(200).send(retrievedGizmo);
+  } catch (e) {
+    if (e.name === 'NotFoundError') {
+      res.status(404).send({ message: e.message })
+    } else {
+      throw e;
+    }
+  }
 }
 
 const createGizmoPOST = async (req, res) => {
