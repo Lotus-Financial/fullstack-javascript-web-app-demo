@@ -4,12 +4,12 @@ const examplesController = {};
 
 examplesController.listGizmos = async () => await examplesService.retrieveGizmos();
 
-examplesController.retrieveGizmo = name => examplesService.retrieveGizmo(name);
+examplesController.retrieveGizmo = async name => await examplesService.retrieveGizmo(name);
 
-examplesController.createGizmo = gizmo => examplesService.createGizmo(gizmo);
+examplesController.createGizmo = async gizmo => await examplesService.createGizmo(gizmo);
 
-examplesController.updateGizmo = gizmo => examplesService.updateGizmo(gizmo);
+examplesController.updateGizmo = async gizmo => await examplesService.updateGizmo(gizmo);
 
-examplesController.deleteGizmo = name => examplesService.deleteGizmo(name);
+examplesController.deleteGizmo = async name => await examplesService.deleteGizmo(name);
 
 module.exports = examplesController;
