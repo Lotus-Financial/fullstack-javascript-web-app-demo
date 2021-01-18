@@ -10,22 +10,22 @@ const listGizmosGET = async (req, res) => {
 }
 
 const retrieveGizmoGET = async (req, res) => {
-  const retrievedGizmo = examplesController.retrieveGizmo(req.params?.id);
+  const retrievedGizmo = await examplesController.retrieveGizmo(req.params?.id);
   res.status(200).send(retrievedGizmo);
 }
 
 const createGizmoPOST = async (req, res) => {
-  const createdGizmo = examplesController.createGizmo(req.body?.data);
+  const createdGizmo = await examplesController.createGizmo(req.body?.data);
   res.status(201).send(createdGizmo);
 }
 
 const updateGizmoPUT = async (req, res) => {
-  const updatedGizmo = examplesController.updateGizmo(req.body?.data);
+  const updatedGizmo = await examplesController.updateGizmo(req.body?.data);
   res.status(200).send(updatedGizmo);
 }
 
 const deleteGizmoDELETE = async (req, res) => {
-  const deletedGizmo = examplesController.deleteGizmo(req.params?.id);
+  const deletedGizmo = await examplesController.deleteGizmo(req.params?.id);
   res.status(200).send(deletedGizmo);
 }
 
