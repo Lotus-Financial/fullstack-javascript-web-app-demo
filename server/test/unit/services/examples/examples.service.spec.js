@@ -26,17 +26,18 @@ describe('Unit Tests - examples.service', () => {
     sandbox.restore();
   });
 
-  describe('examples.service.retrieveGizmos', () => {
+  describe('examples.service.listGizmos', () => {
     it('should call Gizmo.findAll once', async () => {
-      await examplesService.retrieveGizmos();
+      await examplesService.listGizmos();
       assert.calledOnce(Gizmo.findAll);
     });
 
     it('should resolve with the list of retrieved gizmos', async () => {
-      const retrievedGizmos = await examplesService.retrieveGizmos();
+      const retrievedGizmos = await examplesService.listGizmos();
       
       expect(retrievedGizmos).to.deep.equal(gizmos);
     });
   });
+
 
 });

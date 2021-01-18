@@ -2,7 +2,7 @@ const examplesService = require('../../services/examples/examples.service.js');
 
 const examplesController = {};
 
-examplesController.listGizmos = async () => await examplesService.retrieveGizmos();
+examplesController.listGizmos = async () => await examplesService.listGizmos();
 
 examplesController.retrieveGizmo = async name => await examplesService.retrieveGizmo(name);
 

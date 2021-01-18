@@ -3,7 +3,7 @@ const Gizmo = db.Gizmo;
 
 const examplesService = {};
 
-examplesService.retrieveGizmos = async () => {
+examplesService.listGizmos = async () => {
   const gizmos = await Gizmo.findAll();
   const plainGizmos = gizmos.map(gizmo => gizmo.get({ plain: true}));
   return plainGizmos;
