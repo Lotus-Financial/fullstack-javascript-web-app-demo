@@ -55,16 +55,16 @@ describe('Unit Tests - examples.router', () => {
 
   describe('retrieveGizmoGET', () => {
     describe('Success cases', () => {
-      it('should call examplesController.retrieveGizmo with the correct args', () => {
+      it('should call examplesController.retrieveGizmo with the correct args', async () => {
         const gizmoId = 1;
         req.params.id = gizmoId;
-        retrieveGizmoGET(req, res);
+        await retrieveGizmoGET(req, res);
         
         assert.calledWith(examplesController.retrieveGizmo, gizmoId)
       });
 
-      it('should respond with a 200 status and the retrieved gizmo', () => {
-        retrieveGizmoGET(req, res);
+      it('should respond with a 200 status and the retrieved gizmo', async () => {
+        await retrieveGizmoGET(req, res);
 
         assert.calledWith(statusStub, 200);
         assert.calledWith(sendStub, gizmo1);
@@ -74,16 +74,16 @@ describe('Unit Tests - examples.router', () => {
  
   describe('createGizmoPOST', () => {
     describe('Success cases', () => {
-      it('should call examplesController.createGizmo with the correct args', () => {
+      it('should call examplesController.createGizmo with the correct args', async () => {
         const gizmoToCreate = {};
         req.body.data = gizmoToCreate;
-        createGizmoPOST(req, res);
+        await createGizmoPOST(req, res);
 
         assert.calledWith(examplesController.createGizmo, gizmoToCreate);
       });
       
-      it('should respond with a 201 status and the created gizmo', () => {
-        createGizmoPOST(req, res);
+      it('should respond with a 201 status and the created gizmo', async () => {
+        await createGizmoPOST(req, res);
 
         assert.calledWith(statusStub, 201);
         assert.calledWith(sendStub, gizmo2);
@@ -93,16 +93,16 @@ describe('Unit Tests - examples.router', () => {
 
   describe('updateGizmoPUT', () => {
     describe('Success cases', () => {
-      it('should call examplesController.updateGizmo with the correct args', () => {
+      it('should call examplesController.updateGizmo with the correct args', async () => {
         const gizmoToUpdate = {};
         req.body.data = gizmoToUpdate;
-        updateGizmoPUT(req, res);
+        await updateGizmoPUT(req, res);
 
         assert.calledWith(examplesController.updateGizmo, gizmoToUpdate);
       });
 
-      it('should respond with a 200 status and the updated gizmo', () => {
-        updateGizmoPUT(req, res);
+      it('should respond with a 200 status and the updated gizmo', async () => {
+        await updateGizmoPUT(req, res);
 
         assert.calledWith(statusStub, 200);
         assert.calledWith(sendStub, gizmo3);
@@ -112,16 +112,16 @@ describe('Unit Tests - examples.router', () => {
 
   describe('deleteGizmoDELETE', () => {
     describe('Success cases', () => {
-      it('should call examplesController.updateGizmo with the correct args', () => {
+      it('should call examplesController.updateGizmo with the correct args', async () => {
         const gizmoToDeleteId = 1;
         req.params.id = gizmoToDeleteId;
-        deleteGizmoDELETE(req, res);
+        await deleteGizmoDELETE(req, res);
 
         assert.calledWith(examplesController.deleteGizmo, gizmoToDeleteId);
       });
 
-      it('should respond with a 200 status and the updated gizmo', () => {
-        deleteGizmoDELETE(req, res);
+      it('should respond with a 200 status and the updated gizmo', async () => {
+        await deleteGizmoDELETE(req, res);
 
         assert.calledWith(statusStub, 200);
         assert.calledWith(sendStub, gizmo1);
