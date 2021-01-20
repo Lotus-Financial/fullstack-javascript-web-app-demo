@@ -4,24 +4,31 @@ const examplesController = require('../../controllers/examples/examples.controll
 
 const examplesRouter = express.Router();
 
+const { isPositiveInteger } = require('../../helpers/validators/numeric.validator');
+const customErrors = require('../../helpers/errors/customErrors');
+
 const listGizmosGET = async (req, res) => {
-  const gizmos = await examplesController.listGizmos();
-  res.status(200).send(gizmos);
+  try {
+    const gizmos = await examplesController.listGizmos();
+    res.status(200).send(gizmos);
+  } catch (e) {
+    next(e);
+  }
 }
 
 const retrieveGizmoGET = async (req, res, next) => {
-  let retrievedGizmo;
-  try {
-    retrievedGizmo = await examplesController.retrieveGizmo(req.params?.id);
+  const gizmoId = req.params?.id;
+  if (!isPositiveInteger(gizmoId)) {
+    next(new customErrors.InvalidIdError('gizmo', gizmoId))
+  }
 
+  try {
+
+    const retrievedGizmo = await examplesController.retrieveGizmo(gizmoId);
     res.status(200).send(retrievedGizmo);
+
   } catch (e) {
     next(e);
-  //   if (e.name === 'NotFoundError') {
-  //     res.status(404).send({ message: e.message })
-  //   } else {
-  //     throw e;
-  //   }
   }
 }
 
