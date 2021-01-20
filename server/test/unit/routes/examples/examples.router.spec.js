@@ -4,11 +4,14 @@ const examplesController = require('../../../../api/controllers/examples/example
 
 const { createGizmoPOST, deleteGizmoDELETE, listGizmosGET, retrieveGizmoGET, updateGizmoPUT } = require('../../../../api/routes/examples/examples.router.js').callbacks;
 
+const customErrors = require('../../../../api/helpers/errors/customErrors');
+
 const sandbox = createSandbox();
 
 describe('Unit Tests - examples.router', () => {
   let req;
   let res;
+  let nextStub;
   let statusStub;
   let sendStub;
 
@@ -20,16 +23,19 @@ describe('Unit Tests - examples.router', () => {
   beforeEach(() => {
     req = { params: {}, body: {} };
     res = {};
+    nextStub = sandbox.stub();
     sendStub = sandbox.stub();
     statusStub = sandbox.stub().returns(res);
     res.status = statusStub;
     res.send = sendStub;
+    
 
     sandbox.stub(examplesController, 'listGizmos').resolves(gizmos);
-    sandbox.stub(examplesController, 'retrieveGizmo').returns(gizmo1);
     sandbox.stub(examplesController, 'createGizmo').returns(gizmo2);
     sandbox.stub(examplesController, 'updateGizmo').returns(gizmo3);
     sandbox.stub(examplesController, 'deleteGizmo').returns(gizmo1);
+
+    sandbox.stub(customErrors, 'InvalidIdError');
   });
 
   afterEach(() => {
@@ -55,6 +61,11 @@ describe('Unit Tests - examples.router', () => {
 
   describe('retrieveGizmoGET', () => {
     describe('Success cases', () => {
+
+      beforeEach(() => {
+        sandbox.stub(examplesController, 'retrieveGizmo').returns(gizmo1);
+      })
+
       it('should call examplesController.retrieveGizmo with the correct args', async () => {
         const gizmoId = 1;
         req.params.id = gizmoId;
@@ -64,10 +75,46 @@ describe('Unit Tests - examples.router', () => {
       });
 
       it('should respond with a 200 status and the retrieved gizmo', async () => {
+        const gizmoId = 1;
+        req.params.id = gizmoId;
         await retrieveGizmoGET(req, res);
 
         assert.calledWith(statusStub, 200);
         assert.calledWith(sendStub, gizmo1);
+      });
+    });
+
+    describe('Failure cases', () => {
+
+      beforeEach(() => {
+        sandbox.stub(examplesController, 'retrieveGizmo').throws('NotFound');
+      })
+
+      it('should call next with InvalidIdError when gizmo id is invalid', async () => {
+        const invalidGizmoId = null;
+        req.params.id = invalidGizmoId;
+        
+        await retrieveGizmoGET(req, res, nextStub);
+
+        assert.calledWith(nextStub, new customErrors.InvalidIdError);
+      });
+
+      it('should create a new instance of InvalidIdError with the correct arguments when gizmo id is invalid', async () => {
+        const invalidGizmoId = null;
+        req.params.id = invalidGizmoId;
+
+        await retrieveGizmoGET(req, res, nextStub);
+
+        assert.calledWith(customErrors.InvalidIdError, 'gizmo', invalidGizmoId);
+      });
+
+      it('should call next with matching error if thrown from examplesController.retrieveGizmo', async () => {
+        const gizmoId = 1;
+        req.params.id = gizmoId;
+
+        await retrieveGizmoGET(req, res, nextStub);
+
+        assert.calledWithMatch(nextStub, { name: 'NotFound' });
       });
     });
   });
