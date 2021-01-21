@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const gizmoSchema = Joi.object({
-  name: Joi.string(),
+  name: Joi.string().required(),
   type: Joi.string()
 });
 
