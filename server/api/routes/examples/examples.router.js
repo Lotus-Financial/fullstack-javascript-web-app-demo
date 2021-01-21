@@ -4,35 +4,34 @@ const examplesController = require('../../controllers/examples/examples.controll
 
 const examplesRouter = express.Router();
 
+const asyncHandler = require('../../helpers/asyncHandler.helper');
+
 const { isPositiveInteger } = require('../../helpers/validators/numeric.validator');
+const gizmoSchema = require('../../schemas/gizmo.schema');
 const customErrors = require('../../helpers/errors/customErrors');
 
-const listGizmosGET = async (req, res) => {
-  try {
+const listGizmosGET = async (req, res, next) => {
     const gizmos = await examplesController.listGizmos();
     res.status(200).send(gizmos);
-  } catch (e) {
-    next(e);
-  }
-}
+};
 
 const retrieveGizmoGET = async (req, res, next) => {
   const gizmoId = req.params?.id;
   if (!isPositiveInteger(gizmoId)) {
-    next(new customErrors.InvalidIdError('gizmo', gizmoId))
+    throw new customErrors.RequestIdValidationError('gizmo', gizmoId);
   }
 
-  try {
-
-    const retrievedGizmo = await examplesController.retrieveGizmo(gizmoId);
-    res.status(200).send(retrievedGizmo);
-
-  } catch (e) {
-    next(e);
-  }
+  const retrievedGizmo = await examplesController.retrieveGizmo(gizmoId);
+  res.status(200).send(retrievedGizmo);
 }
 
-const createGizmoPOST = async (req, res) => {
+const createGizmoPOST = async (req, res, next) => {
+  const gizmoToCreate = req.body?.data; 
+  const gizmoValidation = gizmoSchema.validate(gizmoToCreate);
+  if (gizmoValidation.error) {
+    throw new customErrors.RequestResourceValidationError('gizmo', gizmoValidation.error.message);
+  }
+
   const createdGizmo = await examplesController.createGizmo(req.body?.data);
   res.status(201).send(createdGizmo);
 }
@@ -47,11 +46,11 @@ const deleteGizmoDELETE = async (req, res) => {
   res.status(200).send(deletedGizmo);
 }
 
-examplesRouter.get('/gizmos', listGizmosGET);
-examplesRouter.get('/gizmo/:id', retrieveGizmoGET);
-examplesRouter.post('/gizmo', createGizmoPOST);
-examplesRouter.put('/gizmo', updateGizmoPUT);
-examplesRouter.delete('/gizmo/:id', deleteGizmoDELETE);
+examplesRouter.get('/gizmos', asyncHandler(listGizmosGET));
+examplesRouter.get('/gizmo/:id', asyncHandler(retrieveGizmoGET));
+examplesRouter.post('/gizmo', asyncHandler(createGizmoPOST));
+examplesRouter.put('/gizmo', asyncHandler(updateGizmoPUT));
+examplesRouter.delete('/gizmo/:id', asyncHandler(deleteGizmoDELETE));
 
 module.exports = {
   router: examplesRouter,
