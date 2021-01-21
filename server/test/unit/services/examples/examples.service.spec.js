@@ -3,7 +3,9 @@ const { expect } = require('chai');
 
 const db = require('../../../../db/models');
 const Gizmo = db.Gizmo;
+const customErrors = require('../../../../api/helpers/errors/customErrors');
 const examplesService = require('../../../../api/services/examples/examples.service');
+const { describe } = require('../../../../api/schemas/gizmo.schema');
 
 const sandbox = createSandbox();
 
@@ -16,19 +18,18 @@ describe('Unit Tests - examples.service', () => {
   gizmo3.get = () => gizmo3;
   const gizmos = [ gizmo1, gizmo2, gizmo3 ];
 
-  let findAllStub;
-  let findByPkStub;
-
-  beforeEach(() => {
-    findAllStub = sandbox.stub(Gizmo, 'findAll').resolves(gizmos);
-    findByPkStub = sandbox.stub(Gizmo, 'findByPk').resolves(gizmo1);
-  });
-
   afterEach(() => {
     sandbox.restore();
   });
 
   describe('examples.service.listGizmos', () => {
+    let findAllStub;
+
+    beforeEach(() => {
+      findAllStub = sandbox.stub(Gizmo, 'findAll').resolves(gizmos);
+    });
+  
+
     it('should call Gizmo.findAll once', async () => {
       await examplesService.listGizmos();
 
@@ -43,13 +44,21 @@ describe('Unit Tests - examples.service', () => {
   });
 
   describe('examples.service.retrieveGizmo', () => {
-    it('should call Gizmo.findByPk with the correct args', async () => {
-      await examplesService.retrieveGizmo(gizmo1.id);
-
-      assert.calledWith(Gizmo.findByPk, gizmo1.id);
+    beforeEach(() => {
+      sandbox.stub(customErrors, 'NotFoundError').throws('NotFound');
     });
 
     describe('Success cases', () => {
+      beforeEach(() => {
+        sandbox.stub(Gizmo, 'findByPk').resolves(gizmo1);
+      });
+
+      it('should call Gizmo.findByPk with the correct args', async () => {
+        await examplesService.retrieveGizmo(gizmo1.id);
+  
+        assert.calledWith(Gizmo.findByPk, gizmo1.id);
+      });  
+
       it('should resolve with the retrieved gizmo', async () => {
         const retrievedGizmo = await examplesService.retrieveGizmo(gizmo1.id);
   
@@ -58,12 +67,36 @@ describe('Unit Tests - examples.service', () => {
     });
 
     describe('Failure cases', () => {
-      it('should throw an error when no gizmo is found', async () => {
+      beforeEach(() => {
+        sandbox.stub(Gizmo, 'findByPk').resolves(null);
+      });
 
+      it('should throw an error when no gizmo is found', async () => {
+        try {
+          await examplesService.retrieveGizmo(gizmo1.id);
+        } catch (e) {
+          expect(e).to.be.instanceOf(Error);
+          expect(e.name).to.equal('NotFound');
+        }
+      });
+
+      it('should create a new instance of NotFoundError with the correct arguments when no gizmo is found', async () => {
+        try {
+          await examplesService.retrieveGizmo(gizmo1.id);
+        } catch (e) {
+          assert.calledWith(customErrors.NotFoundError, 'Gizmo', gizmo1.id);
+        }
       });
     });
   });
- 
-  
 
+  describe('examples.service.createGizmo', () => {
+    describe('Success cases', () => {
+    
+    });
+
+    describe('Failure cases', () => {
+    
+    });
+  });
 });

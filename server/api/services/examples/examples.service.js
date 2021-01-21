@@ -14,7 +14,7 @@ examplesService.listGizmos = async () => {
 examplesService.retrieveGizmo = async id => {
   const gizmo = await Gizmo.findByPk(id);
   if (gizmo === null) {
-    throw new customErrors.NotFoundError('Gizmo', id)
+    throw new customErrors.NotFoundError('Gizmo', id);
   }
   const plainGizmo = gizmo.get({ plain: true });
   return plainGizmo;
