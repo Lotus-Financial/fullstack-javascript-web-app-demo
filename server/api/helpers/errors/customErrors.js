@@ -1,12 +1,23 @@
-class InvalidIdError extends Error {
-  constructor(resource, id) {
-    super(`Invalid id ${id} for resource: ${resource}.`)
-
+class RequestValidationError extends Error {
+  constructor(message) {
+    super(message);
     this.statusCode = 422;
     this.status = 'fail';
     this.name = this.constructor.name;
 
-    Error.captureStackTrace(this,  this.constructor);
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+class RequestIdValidationError extends RequestValidationError {
+  constructor(resource, id) {
+    super(`Invalid id ${id} provided for resource: ${resource}.`)
+  }
+}
+
+class RequestResourceValidationError extends RequestValidationError {
+  constructor(resource, message) {
+    super(`Invalid data provided for resource: ${resource}. Validation error: ${message}.`)
   }
 }
 
@@ -35,7 +46,8 @@ class NotFoundError extends Error {
 }
 
 module.exports = {
-  InvalidIdError,
+  RequestIdValidationError,
+  RequestResourceValidationError,
   InvalidRouteError,
   NotFoundError
 };
