@@ -1,3 +1,4 @@
+const { expect } = require('chai');
 const { assert, createSandbox } = require('sinon');
 
 const examplesController = require('../../../../api/controllers/examples/examples.controller.js');
@@ -23,19 +24,17 @@ describe('Unit Tests - examples.router', () => {
   beforeEach(() => {
     req = { params: {}, body: {} };
     res = {};
-    nextStub = sandbox.stub();
     sendStub = sandbox.stub();
     statusStub = sandbox.stub().returns(res);
     res.status = statusStub;
     res.send = sendStub;
     
-
     sandbox.stub(examplesController, 'listGizmos').resolves(gizmos);
     sandbox.stub(examplesController, 'createGizmo').returns(gizmo2);
     sandbox.stub(examplesController, 'updateGizmo').returns(gizmo3);
     sandbox.stub(examplesController, 'deleteGizmo').returns(gizmo1);
 
-    sandbox.stub(customErrors, 'RequestIdValidationError');
+    sandbox.stub(customErrors, 'RequestIdValidationError').throws('IdValidationError');
   });
 
   afterEach(() => {
@@ -87,34 +86,42 @@ describe('Unit Tests - examples.router', () => {
     describe('Failure cases', () => {
 
       beforeEach(() => {
-        sandbox.stub(examplesController, 'retrieveGizmo').throws('NotFound');
-      })
+        sandbox.stub(examplesController, 'retrieveGizmo').throws('NotFoundError');
+      });
 
-      it('should call next with RequestIdValidationError when gizmo id is invalid', async () => {
+      it('should throw RequestIdValidationError when gizmo id is invalid', async () => {
         const invalidGizmoId = null;
         req.params.id = invalidGizmoId;
 
-        await retrieveGizmoGET(req, res, nextStub);
-
-        assert.calledWith(nextStub, new customErrors.RequestIdValidationError);
+        try {
+          await retrieveGizmoGET(req, res);
+        } catch (e) {
+          expect(e).to.be.instanceOf(Error);
+          expect(e.name).to.equal('IdValidationError');
+        }
       });
 
       it('should create a new instance of RequestIdValidationError with the correct arguments when gizmo id is invalid', async () => {
         const invalidGizmoId = null;
         req.params.id = invalidGizmoId;
 
-        await retrieveGizmoGET(req, res, nextStub);
-
-        assert.calledWith(customErrors.RequestIdValidationError, 'gizmo', invalidGizmoId);
+        try {
+          await retrieveGizmoGET(req, res, nextStub);
+        } catch (e) {
+          assert.calledWith(customErrors.RequestIdValidationError, 'gizmo', invalidGizmoId);
+        }
       });
 
-      it('should call next with matching error if thrown from examplesController.retrieveGizmo', async () => {
+      it('should throw error if examplesController.retrieveGizmo is not found', async () => {
         const gizmoId = 1;
         req.params.id = gizmoId;
 
-        await retrieveGizmoGET(req, res, nextStub);
-
-        assert.calledWithMatch(nextStub, { name: 'NotFound' });
+        try {
+          await retrieveGizmoGET(req, res, nextStub);
+        } catch (e) {
+          expect(e).to.be.instanceOf(Error);
+          expect(e.name).to.equal('NotFoundError');
+        }
       });
     });
   });
