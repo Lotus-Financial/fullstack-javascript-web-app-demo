@@ -5,7 +5,6 @@ const db = require('../../../../db/models');
 const Gizmo = db.Gizmo;
 const customErrors = require('../../../../api/helpers/errors/customErrors');
 const examplesService = require('../../../../api/services/examples/examples.service');
-const { describe } = require('../../../../api/schemas/gizmo.schema');
 
 const sandbox = createSandbox();
 

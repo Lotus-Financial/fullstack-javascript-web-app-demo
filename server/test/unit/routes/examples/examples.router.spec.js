@@ -35,7 +35,7 @@ describe('Unit Tests - examples.router', () => {
     sandbox.stub(examplesController, 'updateGizmo').returns(gizmo3);
     sandbox.stub(examplesController, 'deleteGizmo').returns(gizmo1);
 
-    sandbox.stub(customErrors, 'InvalidIdError');
+    sandbox.stub(customErrors, 'RequestIdValidationError');
   });
 
   afterEach(() => {
@@ -90,22 +90,22 @@ describe('Unit Tests - examples.router', () => {
         sandbox.stub(examplesController, 'retrieveGizmo').throws('NotFound');
       })
 
-      it('should call next with InvalidIdError when gizmo id is invalid', async () => {
+      it('should call next with RequestIdValidationError when gizmo id is invalid', async () => {
         const invalidGizmoId = null;
         req.params.id = invalidGizmoId;
-        
+
         await retrieveGizmoGET(req, res, nextStub);
 
-        assert.calledWith(nextStub, new customErrors.InvalidIdError);
+        assert.calledWith(nextStub, new customErrors.RequestIdValidationError);
       });
 
-      it('should create a new instance of InvalidIdError with the correct arguments when gizmo id is invalid', async () => {
+      it('should create a new instance of RequestIdValidationError with the correct arguments when gizmo id is invalid', async () => {
         const invalidGizmoId = null;
         req.params.id = invalidGizmoId;
 
         await retrieveGizmoGET(req, res, nextStub);
 
-        assert.calledWith(customErrors.InvalidIdError, 'gizmo', invalidGizmoId);
+        assert.calledWith(customErrors.RequestIdValidationError, 'gizmo', invalidGizmoId);
       });
 
       it('should call next with matching error if thrown from examplesController.retrieveGizmo', async () => {
