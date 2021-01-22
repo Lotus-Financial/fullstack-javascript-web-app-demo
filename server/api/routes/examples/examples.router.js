@@ -10,12 +10,12 @@ const { isPositiveInteger } = require('../../helpers/validators/numeric.validato
 const gizmoSchema = require('../../schemas/gizmo.schema');
 const customErrors = require('../../helpers/errors/customErrors');
 
-const listGizmosGET = async (req, res, next) => {
+const listGizmosGET = async (req, res) => {
     const gizmos = await examplesController.listGizmos();
     res.status(200).send(gizmos);
 };
 
-const retrieveGizmoGET = async (req, res, next) => {
+const retrieveGizmoGET = async (req, res) => {
   const gizmoId = req.params?.id;
   if (!isPositiveInteger(gizmoId)) {
     throw new customErrors.RequestIdValidationError('gizmo', gizmoId);
@@ -25,7 +25,7 @@ const retrieveGizmoGET = async (req, res, next) => {
   res.status(200).send(retrievedGizmo);
 }
 
-const createGizmoPOST = async (req, res, next) => {
+const createGizmoPOST = async (req, res) => {
   const gizmoToCreate = req.body?.data; 
   const gizmoValidation = gizmoSchema.validate(gizmoToCreate);
   if (gizmoValidation.error) {
