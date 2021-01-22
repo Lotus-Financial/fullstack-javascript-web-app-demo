@@ -20,7 +20,10 @@ examplesService.retrieveGizmo = async id => {
   return plainGizmo;
 }
 
-examplesService.createGizmo = async gizmo => {};
+examplesService.createGizmo = async gizmo => {
+  const createdGizmo = await Gizmo.create(gizmo);
+  return createdGizmo;
+};
 
 examplesService.updateGizmo = async gizmo => {}
 
