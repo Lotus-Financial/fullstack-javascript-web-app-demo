@@ -27,7 +27,7 @@ const retrieveGizmoGET = async (req, res) => {
 
 const createGizmoPOST = async (req, res) => {
   const gizmoToCreate = req.body?.data; 
-  const gizmoValidation = gizmoSchema.validate(gizmoToCreate);
+  const gizmoValidation = gizmoSchema.create.validate(gizmoToCreate);
   if (gizmoValidation.error) {
     throw new customErrors.RequestResourceValidationError('gizmo', gizmoValidation.error.message);
   }
@@ -37,11 +37,22 @@ const createGizmoPOST = async (req, res) => {
 }
 
 const updateGizmoPUT = async (req, res) => {
+  const gizmoToUpdate = req.body?.data;
+  const gizmoValidation = gizmoSchema.update.validate(gizmoToUpdate);
+  if (gizmoValidation.error) {
+    throw new customErrors.RequestResourceValidationError('gizmo', gizmoValidation.error.message);
+  }
+
   const updatedGizmo = await examplesController.updateGizmo(req.body?.data);
   res.status(200).send(updatedGizmo);
 }
 
 const deleteGizmoDELETE = async (req, res) => {
+  const gizmoId = req.params?.id;
+  if (!isPositiveInteger(gizmoId)) {
+    throw new customErrors.RequestIdValidationError('gizmo', gizmoId);
+  }
+
   const deletedGizmo = await examplesController.deleteGizmo(req.params?.id);
   res.status(200).send(deletedGizmo);
 }
