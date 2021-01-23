@@ -3,6 +3,8 @@ const { assert, createSandbox } = require('sinon');
 
 const faker = require('faker');
 
+const errorTestingUtil = require('../../../helpers/errorTestingUtil');
+
 const examplesController = require('../../../../api/controllers/examples/examples.controller.js');
 
 const { createGizmoPOST, deleteGizmoDELETE, listGizmosGET, retrieveGizmoGET, updateGizmoPUT } = require('../../../../api/routes/examples/examples.router.js').callbacks;
@@ -14,7 +16,6 @@ const sandbox = createSandbox();
 describe('Unit Tests - examples.router', () => {
   let req;
   let res;
-  let nextStub;
   let statusStub;
   let sendStub;
 
@@ -62,22 +63,23 @@ describe('Unit Tests - examples.router', () => {
   });
 
   describe('retrieveGizmoGET', () => {
+    let gizmoId;
+
     beforeEach(() => {
+      gizmoId = faker.random.number();
+      req.params.id = gizmoId;
+
       sandbox.stub(examplesController, 'retrieveGizmo').returns(gizmo1);
-    })
+    });
 
     describe('Success cases', () => {
       it('should call examplesController.retrieveGizmo with the correct args', async () => {
-        const gizmoId = 1;
-        req.params.id = gizmoId;
         await retrieveGizmoGET(req, res);
         
         assert.calledWith(examplesController.retrieveGizmo, gizmoId)
       });
 
       it('should respond with a 200 status and the retrieved gizmo', async () => {
-        const gizmoId = 1;
-        req.params.id = gizmoId;
         await retrieveGizmoGET(req, res);
 
         assert.calledWith(statusStub, 200);
@@ -86,26 +88,22 @@ describe('Unit Tests - examples.router', () => {
     });
 
     describe('Failure cases', () => {
-      it('should throw RequestIdValidationError when gizmo id is invalid', async () => {
-        const invalidGizmoId = null;
-        req.params.id = invalidGizmoId;
+      const invalidGizmoId = null;
 
-        try {
-          await retrieveGizmoGET(req, res);
-        } catch (e) {
-          expect(e.name).to.equal('IdValidationError');
-        }
+      beforeEach(() => {
+        req.params.id = invalidGizmoId;
+      });
+
+      it('should throw RequestIdValidationError when gizmo id is invalid', async () => {
+        const error = await errorTestingUtil(retrieveGizmoGET, req, res);
+
+        expect(error.name).to.equal('IdValidationError');
       });
 
       it('should create a new instance of RequestIdValidationError with the correct arguments when gizmo id is invalid', async () => {
-        const invalidGizmoId = null;
-        req.params.id = invalidGizmoId;
+        await errorTestingUtil(retrieveGizmoGET, req, res);
 
-        try {
-          await retrieveGizmoGET(req, res, nextStub);
-        } catch (e) {
-          assert.calledWith(customErrors.RequestIdValidationError, 'gizmo', invalidGizmoId);
-        }
+        assert.calledWith(customErrors.RequestIdValidationError, 'gizmo', invalidGizmoId);
       });
     });
   });
@@ -147,29 +145,34 @@ describe('Unit Tests - examples.router', () => {
         req.body.data = badGizmoToCreate;
       });
 
-      it('should throw RequestResourceValidationError when gizmo data is invalid', async () => {
-        try {
-          await createGizmoPOST(req, res);
-        } catch (e) {
-          expect(e.name).to.equal('ResourceValidationError');
-        }
+      it('should throw RequestResourceValidationError when gizmo create data is invalid', async () => {
+        const error = await errorTestingUtil(createGizmoPOST, req, res);
+
+        expect(error.name).to.equal('ResourceValidationError');
       });
 
-      it('should create a new instance of RequestResourceValidationError with the correct arguments when gizmo data is invalid', async () => {
-        try {
-          await createGizmoPOST(req, res, nextStub);
-        } catch (e) {
-          assert.calledWith(customErrors.RequestResourceValidationError, 'gizmo', '"name" must be a string');
-        }
+      it('should create a new instance of RequestResourceValidationError with the correct arguments when gizmo create data is invalid', async () => {
+        await errorTestingUtil(createGizmoPOST, req, res);
+        
+        assert.calledWith(customErrors.RequestResourceValidationError, 'gizmo', '"name" must be a string');
       });
     });
   });
 
   describe('updateGizmoPUT', () => {
     describe('Success cases', () => {
-      it('should call examplesController.updateGizmo with the correct args', async () => {
-        const gizmoToUpdate = {};
+      let gizmoToUpdate;
+
+      beforeEach(() => {
+        gizmoToUpdate = {
+          id: faker.random.number(),
+          name: faker.random.word(),
+          type: faker.random.word()
+        };
         req.body.data = gizmoToUpdate;
+      });
+
+      it('should call examplesController.updateGizmo with the correct args', async () => {
         await updateGizmoPUT(req, res);
 
         assert.calledWith(examplesController.updateGizmo, gizmoToUpdate);
@@ -182,16 +185,46 @@ describe('Unit Tests - examples.router', () => {
         assert.calledWith(sendStub, gizmo3);
       });
     });
+
+    describe('Failure cases', () => {
+      let badGizmoToUpdate;
+
+      beforeEach(() => {
+        badGizmoToUpdate = {
+          id: faker.random.number(),
+          name: faker.random.word(),
+          type: faker.random.number()
+        };
+        req.body.data = badGizmoToUpdate;
+      });
+
+      it('should throw RequestResourceValidationError when gizmo update data is invalid', async () => {
+        const error = await errorTestingUtil(updateGizmoPUT, req, res);
+
+        expect(error.name).to.equal('ResourceValidationError');
+      });
+
+      it('should create a new instance of RequestResourceValidationError with the correct arguments when gizmo update data is invalid', async () => {
+        await errorTestingUtil(updateGizmoPUT, req, res);
+
+        assert.calledWith(customErrors.RequestResourceValidationError, 'gizmo', '"type" must be a string');
+      });
+    });
   });
 
   describe('deleteGizmoDELETE', () => {
     describe('Success cases', () => {
+      let gizmoId;
+
+      beforeEach(() => {
+        gizmoId = faker.random.number();
+        req.params.id = gizmoId;
+      });
+
       it('should call examplesController.updateGizmo with the correct args', async () => {
-        const gizmoToDeleteId = 1;
-        req.params.id = gizmoToDeleteId;
         await deleteGizmoDELETE(req, res);
 
-        assert.calledWith(examplesController.deleteGizmo, gizmoToDeleteId);
+        assert.calledWith(examplesController.deleteGizmo, gizmoId);
       });
 
       it('should respond with a 200 status and the updated gizmo', async () => {
@@ -199,6 +232,27 @@ describe('Unit Tests - examples.router', () => {
 
         assert.calledWith(statusStub, 200);
         assert.calledWith(sendStub, gizmo1);
+      });
+    });
+
+    describe('Failure cases', () => {
+      let invalidGizmoId;
+
+      beforeEach(() => {
+        invalidGizmoId = faker.random.word();
+        req.params.id = invalidGizmoId;
+      });
+
+      it('should throw RequestIdValidationError when gizmo id is invalid', async () => {
+        const error = await errorTestingUtil(deleteGizmoDELETE, req, res);
+
+        expect(error.name).to.equal('IdValidationError');
+      });
+
+      it('should create a new instance of RequestIdValidationError with the correct arguments when gizmo id is invalid', async () => {
+        await errorTestingUtil(deleteGizmoDELETE, req, res);
+
+        assert.calledWith(customErrors.RequestIdValidationError, 'gizmo', invalidGizmoId);
       });
     });
   });
