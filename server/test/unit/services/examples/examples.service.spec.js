@@ -1,6 +1,10 @@
 const { assert, createSandbox } = require('sinon');
 const { expect } = require('chai');
 
+const faker = require('faker');
+
+const errorTestingUtil = require('../../../helpers/errorTestingUtil');
+
 const db = require('../../../../db/models');
 const Gizmo = db.Gizmo;
 const customErrors = require('../../../../api/helpers/errors/customErrors');
@@ -22,10 +26,8 @@ describe('Unit Tests - examples.service', () => {
   });
 
   describe('examples.service.listGizmos', () => {
-    let findAllStub;
-
     beforeEach(() => {
-      findAllStub = sandbox.stub(Gizmo, 'findAll').resolves(gizmos);
+      sandbox.stub(Gizmo, 'findAll').resolves(gizmos);
     });
   
 
@@ -71,31 +73,47 @@ describe('Unit Tests - examples.service', () => {
       });
 
       it('should throw an error when no gizmo is found', async () => {
-        try {
-          await examplesService.retrieveGizmo(gizmo1.id);
-        } catch (e) {
-          expect(e).to.be.instanceOf(Error);
-          expect(e.name).to.equal('NotFound');
-        }
+        const error = await errorTestingUtil(examplesService.retrieveGizmo, gizmo1.id);
+
+        expect(error.name).to.equal('NotFound');
       });
 
       it('should create a new instance of NotFoundError with the correct arguments when no gizmo is found', async () => {
-        try {
-          await examplesService.retrieveGizmo(gizmo1.id);
-        } catch (e) {
-          assert.calledWith(customErrors.NotFoundError, 'Gizmo', gizmo1.id);
-        }
+        await errorTestingUtil(examplesService.retrieveGizmo, gizmo1.id);
+
+        assert.calledWith(customErrors.NotFoundError, 'Gizmo', gizmo1.id);
       });
     });
   });
 
   describe('examples.service.createGizmo', () => {
-    describe('Success cases', () => {
-    
+    let gizmo;
+
+    beforeEach(() => {
+      gizmo = { name: faker.random.word(), type: faker.random.word() };
+      sandbox.stub(Gizmo, 'create').resolves(gizmo);
     });
 
-    describe('Failure cases', () => {
-    
+    describe('Success cases', () => {
+      it('should call Gizmo.create with the correct args', async () => {
+        await examplesService.createGizmo(gizmo);
+
+        assert.calledWith(Gizmo.create, gizmo);
+      });
+
+      it('should return the created gizmo', async () => {
+        const createdGizmo = await examplesService.createGizmo(gizmo);
+
+        expect(createdGizmo).to.deep.equal(gizmo);
+      });
     });
+  });
+  
+  describe('examples.service.updateGizmo', () => {
+
+  });
+
+  describe('examples.service.deleteGizmo', () => {
+
   });
 });
