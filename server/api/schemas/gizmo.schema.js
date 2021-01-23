@@ -6,7 +6,7 @@ const gizmoCreateSchema = Joi.object({
 });
 
 const gizmoUpdateSchema = Joi.object({
-  id: Joi.number().positive().integer().required(),
+  id: Joi.number().positive().integer(),
   name: Joi.string().required(),
   type: Joi.string().required()
 });
