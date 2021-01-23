@@ -1,8 +1,16 @@
 const Joi = require('joi');
 
-const gizmoSchema = Joi.object({
+const gizmoCreateSchema = Joi.object({
   name: Joi.string().required(),
-  type: Joi.string()
+  type: Joi.string().required()
 });
 
-module.exports = gizmoSchema;
+const gizmoUpdateSchema = Joi.object({
+  name: Joi.string().required(),
+  type: Joi.string().required()
+});
+
+module.exports = {
+  create: gizmoCreateSchema,
+  update: gizmoUpdateSchema
+};
