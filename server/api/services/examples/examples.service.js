@@ -22,8 +22,7 @@ examplesService.listGizmos = async () => {
 examplesService.retrieveGizmo = async id => {
   const gizmo = await findGizmo(id);
 
-  const plainGizmo = gizmo.get({ plain: true });
-  return plainGizmo;
+  return gizmo.get({ plain: true });
 }
 
 examplesService.createGizmo = async gizmo => {
@@ -31,12 +30,12 @@ examplesService.createGizmo = async gizmo => {
   return createdGizmo;
 };
 
-examplesService.updateGizmo = async gizmo => {
-  const foundGizmo = await findGizmo(gizmo.id);
+examplesService.updateGizmo = async (id, gizmoUpdates) => {
+  const originalGizmo = await findGizmo(id);
 
-  const updatedGizmo = await Gizmo.update(gizmo);
+  const updatedGizmo = await originalGizmo.update(gizmoUpdates);
 
-  return updatedGizmo;
+  return updatedGizmo.get({ plain: true });
 }
 
 examplesService.deleteGizmo = async id => {}

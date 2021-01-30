@@ -38,18 +38,18 @@ const createGizmoPOST = async (req, res) => {
 
 const updateGizmoPUT = async (req, res) => {
   const gizmoId = req.params?.id;
-  const gizmoUpdateData = req.body?.data;
+  const gizmoUpdates = req.body?.data;
 
   if (!isPositiveInteger(gizmoId)) {
     throw new customErrors.RequestIdValidationError('gizmo', gizmoId);
   }
 
-  const gizmoValidation = gizmoSchema.update.validate(gizmoUpdateData);
+  const gizmoValidation = gizmoSchema.update.validate(gizmoUpdates);
   if (gizmoValidation.error) {
     throw new customErrors.RequestResourceValidationError('gizmo', gizmoValidation.error.message);
   }
 
-  const updatedGizmo = await examplesController.updateGizmo(gizmoId, gizmoUpdateData);
+  const updatedGizmo = await examplesController.updateGizmo(gizmoId, gizmoUpdates);
   res.status(200).send(updatedGizmo);
 }
 

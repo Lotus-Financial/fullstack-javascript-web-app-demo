@@ -8,7 +8,7 @@ examplesController.retrieveGizmo = async name => await examplesService.retrieveG
 
 examplesController.createGizmo = async gizmo => await examplesService.createGizmo(gizmo);
 
-examplesController.updateGizmo = async gizmo => await examplesService.updateGizmo(gizmo);
+examplesController.updateGizmo = async gizmo => await examplesService.updateGizmo(id, gizmoUpdates);
 
 examplesController.deleteGizmo = async name => await examplesService.deleteGizmo(name);
 
