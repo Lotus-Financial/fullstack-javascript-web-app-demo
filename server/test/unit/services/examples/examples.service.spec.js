@@ -21,6 +21,10 @@ describe('Unit Tests - examples.service', () => {
   gizmo3.get = () => gizmo3;
   const gizmos = [ gizmo1, gizmo2, gizmo3 ];
 
+  beforeEach(() => {
+    sandbox.stub(customErrors, 'NotFoundError').throws('NotFound');
+  });
+
   afterEach(() => {
     sandbox.restore();
   });
@@ -45,10 +49,6 @@ describe('Unit Tests - examples.service', () => {
   });
 
   describe('examples.service.retrieveGizmo', () => {
-    beforeEach(() => {
-      sandbox.stub(customErrors, 'NotFoundError').throws('NotFound');
-    });
-
     describe('Success cases', () => {
       beforeEach(() => {
         sandbox.stub(Gizmo, 'findByPk').resolves(gizmo1);
@@ -90,7 +90,7 @@ describe('Unit Tests - examples.service', () => {
     let gizmo;
 
     beforeEach(() => {
-      gizmo = { name: faker.random.word(), type: faker.random.word() };
+      gizmo = { id: faker.random.number(), name: faker.random.word(), type: faker.random.word() };
       sandbox.stub(Gizmo, 'create').resolves(gizmo);
     });
 
@@ -110,7 +110,53 @@ describe('Unit Tests - examples.service', () => {
   });
   
   describe('examples.service.updateGizmo', () => {
+    let gizmoUpdates;
+    let updatedGizmo;
 
+    beforeEach(() => {
+      gizmoUpdates = { name: faker.random.word(), type: faker.random.word() };
+      updatedGizmo = { ...gizmoUpdates, id: faker.random.number() }
+      updatedGizmo.update = () => updatedGizmo;
+      updatedGizmo.get = () => updatedGizmo;
+
+      sandbox.stub(Gizmo, 'update').resolves(updatedGizmo);
+    });
+
+    describe('Success cases', () => {
+      beforeEach(() => {
+        sandbox.stub(Gizmo, 'findByPk').resolves(updatedGizmo);
+      });
+
+      it('should call Gizmo.findByPk with the correct args', async () => {
+        await examplesService.updateGizmo(gizmo1.id, gizmoUpdates);
+  
+        assert.calledWith(Gizmo.findByPk, gizmo1.id);
+      });  
+
+      it('should resolve with the updated gizmo', async () => {
+        const testGizmo = await examplesService.retrieveGizmo(gizmo1.id);
+  
+        expect(testGizmo).to.deep.equal(updatedGizmo);
+      });
+    });
+
+    describe('Failure cases', () => {
+      beforeEach(() => {
+        sandbox.stub(Gizmo, 'findByPk').resolves(null);
+      });
+
+      it('should throw an error when no gizmo is found', async () => {
+        const error = await errorTestingUtil(examplesService.updateGizmo, gizmo1.id, gizmoUpdates);
+
+        expect(error.name).to.equal('NotFound');
+      });
+
+      it('should create a new instance of NotFoundError with the correct arguments when no gizmo is found', async () => {
+        const error = await errorTestingUtil(examplesService.updateGizmo, gizmo1.id, gizmoUpdates);
+
+        assert.calledWith(customErrors.NotFoundError, 'Gizmo', gizmo1.id);
+      });
+    });
   });
 
   describe('examples.service.deleteGizmo', () => {
