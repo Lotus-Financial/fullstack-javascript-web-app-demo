@@ -1,6 +1,7 @@
 module.exports = async (func, ...args) => {
   try {
-    await func(...args);
+    const result = await func(...args);
+    return result;
   } catch (e) {
     return e;
   }
