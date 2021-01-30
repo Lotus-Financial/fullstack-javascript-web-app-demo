@@ -31,13 +31,21 @@ examplesService.createGizmo = async gizmo => {
 };
 
 examplesService.updateGizmo = async (id, gizmoUpdates) => {
-  const originalGizmo = await findGizmo(id);
+  const gizmoToUpdate = await findGizmo(id);
 
-  const updatedGizmo = await originalGizmo.update(gizmoUpdates);
+  const updatedGizmo = await gizmoToUpdate.update(gizmoUpdates);
 
   return updatedGizmo.get({ plain: true });
 }
 
-examplesService.deleteGizmo = async id => {}
+examplesService.deleteGizmo = async id => {
+  const gizmoToDestroy = await Gizmo.findByPk(id);
+
+  const gizmoDestroyedMessage = gizmoToDestroy ? 'Gizmo deleted.' : 'No gizmo found to delete.';
+
+  await gizmoToDestroy?.destroy();
+
+  return gizmoDestroyedMessage;
+}
 
 module.exports = examplesService;
